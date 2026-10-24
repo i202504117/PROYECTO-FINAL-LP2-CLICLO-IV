@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<aside th:fragment="sidebar" class="sidebar">
+    <h3>Menú principal</h3>
+    <a th:href="@{/}">Inicio</a>
+    <a th:href="@{/atenciones}">Atenciones</a>
+    <a th:href="@{/clientes}">Clientes</a>
+    <a sec:authorize="hasAnyRole('ADMINISTRADOR','TECNICO')" th:href="@{/ventas}">Ventas</a>
+    <a sec:authorize="hasAnyRole('ADMINISTRADOR','TECNICO')" th:href="@{/productos}">Productos</a>
+    <a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/compras}">Compras</a>
+    <a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/reportes}">Reportes</a>
+    <a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/usuarios}">Usuarios</a>
+    <a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/categorias}">Categorías</a>
+    <a sec:authorize="hasRole('ADMINISTRADOR')" th:href="@{/proveedores}">Proveedores</a>
+    <hr>
+	<form th:action="@{/logout}" method="post" class="logout-form">
+
+	    <input
+	        type="hidden"
+	        th:name="${_csrf.parameterName}"
+	        th:value="${_csrf.token}">
+
+	    <button type="submit" class="logout-button">
+	        Cerrar sesión
+	    </button>
+
+	</form>
+
+</aside>
+</body>
+</html>

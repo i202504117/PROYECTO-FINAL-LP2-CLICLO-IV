@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Registrar atención - Mundo Tecnológico y Electrónico</title><link rel="stylesheet" th:href="@{/css/estilos.css}"></head>
+<body>
+<header class="header"><div class="brand"><div class="brand-mark">M</div><div class="logo">Mundo Tecnológico y Electrónico</div></div><div class="header-user" sec:authorize="isAuthenticated()">Usuario: <strong sec:authentication="name"></strong></div></header>
+<div class="layout"><div th:replace="~{fragments/menu :: sidebar}"></div><main class="content"><h1 class="page-title">Registrar atención técnica</h1><p class="page-subtitle">Registra el equipo y la falla. Si el cliente no existe, créalo sin salir de esta pantalla.</p>
+<section class="panel"><form th:action="@{/atenciones/guardar}" th:object="${atencion}" method="post">
+<div class="form-grid">
+<div class="form-group full"><label for="clienteId">Cliente existente</label><select id="clienteId" name="clienteId"><option value="">— Crear un cliente nuevo —</option><option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombres + ' ' + cliente.apellidos + ' - ' + cliente.telefono}"></option></select><small class="muted">También puedes crear el cliente en el bloque siguiente.</small></div>
+<div class="form-group full new-client-box"><h3>Nuevo cliente (opcional)</h3><p class="muted">Completa estos campos únicamente si no seleccionaste un cliente existente.</p></div>
+<div class="form-group"><label for="nuevoNombres">Nombres</label><input id="nuevoNombres" name="nuevoNombres" type="text" placeholder="Nombres del cliente"></div>
+<div class="form-group"><label for="nuevoApellidos">Apellidos</label><input id="nuevoApellidos" name="nuevoApellidos" type="text" placeholder="Apellidos del cliente"></div>
+<div class="form-group"><label for="nuevoTelefono">Teléfono</label><input id="nuevoTelefono" name="nuevoTelefono" type="tel" placeholder="Teléfono del cliente"></div>
+<div class="form-group"><label for="nuevoEmail">Correo electrónico</label><input id="nuevoEmail" name="nuevoEmail" type="email" placeholder="Opcional"></div>
+<div class="form-group full"><label for="nuevoDireccion">Dirección</label><input id="nuevoDireccion" name="nuevoDireccion" type="text" placeholder="Opcional"></div>
+<div class="form-group"><label for="tipoEquipo">Tipo de equipo</label><select id="tipoEquipo" th:field="*{tipoEquipo}" required><option value="">Seleccione</option><option value="CELULAR">Celular</option><option value="LAPTOP">Laptop</option><option value="PC">PC</option><option value="TABLET">Tablet</option><option value="OTRO">Otro</option></select></div>
+<div class="form-group"><label for="tipoServicio">Tipo de servicio</label><select id="tipoServicio" th:field="*{tipoServicio}" required><option value="REPARACION">Reparación</option><option value="MANTENIMIENTO">Mantenimiento / limpieza</option></select></div>
+<div class="form-group"><label for="requiereRepuesto">Repuesto necesario</label><select id="requiereRepuesto" th:field="*{requiereRepuesto}"><option value="false">No, solo servicio y mano de obra</option><option value="true">Sí, debe conseguirse un repuesto</option></select><small class="muted">Si se necesita un repuesto sin stock, la atención quedará pendiente hasta registrarlo mediante una compra.</small></div>
+<div class="form-group"><label for="marca">Marca</label><input id="marca" type="text" th:field="*{marca}" required></div>
+<div class="form-group"><label for="modelo">Modelo</label><input id="modelo" type="text" th:field="*{modelo}"></div>
+<div class="form-group"><label for="numeroSerie">Número de serie</label><input id="numeroSerie" type="text" th:field="*{numeroSerie}"></div>
+<div class="form-group full"><label for="fallaReportada">Falla reportada</label><textarea id="fallaReportada" th:field="*{fallaReportada}" required></textarea></div>
+<div class="form-group"><label for="accesoriosEntregados">Accesorios entregados</label><textarea id="accesoriosEntregados" th:field="*{accesoriosEntregados}"></textarea></div>
+<div class="form-group"><label for="observacionesRecepcion">Observaciones de recepción</label><textarea id="observacionesRecepcion" th:field="*{observacionesRecepcion}"></textarea></div>
+<div class="form-group full"><label for="diagnosticoInicial">Diagnóstico inicial</label><textarea id="diagnosticoInicial" th:field="*{diagnosticoInicial}" placeholder="Opcional"></textarea></div>
+</div><div class="actions"><button class="btn btn-primary" type="submit">Registrar atención</button><a class="btn btn-secondary" th:href="@{/atenciones}">Cancelar</a></div></form></section></main></div>
+<script>
+const cliente = document.getElementById('clienteId');
+const campos = ['nuevoNombres','nuevoApellidos','nuevoTelefono','nuevoEmail','nuevoDireccion'].map(id => document.getElementById(id));
+function actualizarClienteNuevo() { const nuevo = !cliente.value; campos.forEach(c => { c.required = nuevo && ['nuevoNombres','nuevoApellidos','nuevoTelefono'].includes(c.id); c.disabled = !nuevo; }); }
+cliente.addEventListener('change', actualizarClienteNuevo); actualizarClienteNuevo();
+</script>
+</body></html>

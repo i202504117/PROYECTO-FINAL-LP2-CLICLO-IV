@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>Consultar reparación - Mundo Tecnológico y Electrónico</title>
+	<link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+	<main class="public-page">
+		<header class="public-header">
+			<div class="brand">
+				<div class="brand-mark">M</div>
+				<div class="logo">Mundo Tecnológico y Electrónico</div>
+			</div>
+			<div class="actions">
+				<a class="btn btn-secondary" th:href="@{/}" sec:authorize="isAuthenticated()">← Ir al inicio</a>
+				<a class="btn btn-secondary" th:href="@{/login}" sec:authorize="!isAuthenticated()">Acceso interno</a>
+			</div>
+		</header>
+
+		<section class="hero">
+			<h1>Consulta el estado de tu equipo</h1>
+			<p>Ingresa el código entregado al registrar tu atención.</p>
+		</section>
+
+		<section class="panel">
+			<form th:action="@{/consulta-atencion}" method="get">
+				<div class="form-group">
+					<label for="codigo">Código de atención</label>
+					<input id="codigo" type="text" name="codigo" placeholder="ST-2026-A3F91C20" required>
+				</div>
+				<div class="actions">
+					<button class="btn btn-primary" type="submit">Consultar estado</button>
+					<a class="btn btn-secondary" href="javascript:history.back()">← Atrás</a>
+				</div>
+			</form>
+			<p th:if="${error}" class="alert alert-error" th:text="${error}"></p>
+		</section>
+
+		<section th:if="${atencion}" class="panel">
+			<h2>Información de la atención</h2>
+			<div class="actions">
+				<a class="btn btn-secondary"
+					th:href="@{/consulta/{codigo}(codigo=${atencion.codigoSeguimiento})}">Enlace directo de consulta</a>
+			</div>
+			<div class="detail-grid">
+				<div class="detail-item">
+					<span class="detail-label">Código</span>
+					<strong th:text="${atencion.codigoSeguimiento}"></strong>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Equipo</span>
+					<span th:text="${atencion.tipoEquipo + ' ' + atencion.marca + ' ' + atencion.modelo}"></span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Estado</span>
+					<span class="badge" th:text="${atencion.estado.descripcion}"></span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Última actualización</span>
+					<span
+						th:text="${atencion.fechaUltimaActualizacion != null ? #temporals.format(atencion.fechaUltimaActualizacion, 'dd/MM/yyyy HH:mm') : 'Sin actualización'}"></span>
+				</div>
+			</div>
+			<div class="status-box"
+				th:if="${atencion.diagnosticoInicial != null and !#strings.isEmpty(atencion.diagnosticoInicial)}">
+				<strong>Diagnóstico:</strong>
+				<p th:text="${atencion.diagnosticoInicial}"></p>
+			</div>
+			<h3 th:if="${evidencias != null and !#lists.isEmpty(evidencias)}">Evidencias</h3>
+			<div class="evidence-grid">
+				<div class="evidence-card" th:each="evidencia : ${evidencias}">
+					<img th:src="@{/consulta-atencion/evidencia/{id}(id=${evidencia.id},codigo=${atencion.codigoSeguimiento})}"
+						alt="Evidencia">
+					<p th:text="${evidencia.descripcion}"></p>
+				</div>
+			</div>
+		</section>
+	</main>
+</body>
+
+</html>

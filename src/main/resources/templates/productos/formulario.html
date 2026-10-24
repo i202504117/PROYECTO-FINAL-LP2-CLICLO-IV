@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Registrar producto - Mundo Tecnológico y Electrónico</title>
+	<link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+	<header class="header">
+		<div class="brand">
+			<div class="brand-mark">M</div>
+			<div class="logo">Mundo Tecnológico y Electrónico</div>
+		</div>
+		<div class="header-user" sec:authorize="isAuthenticated()">
+			Usuario: <strong sec:authentication="name"></strong> &nbsp;|&nbsp;
+			<form th:action="@{/logout}" method="post" class="header-logout-form">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+				<button type="submit" class="header-logout-button">Cerrar sesión</button>
+			</form>
+		</div>
+	</header>
+
+	<div class="layout">
+		<div th:replace="~{fragments/menu :: sidebar}"></div>
+		<main class="content">
+			<h1 class="page-title">Registrar producto</h1>
+			<p class="page-subtitle">Agrega un repuesto o accesorio al inventario.</p>
+			<p th:if="${error}" class="alert alert-error" th:text="${error}"></p>
+
+			<section class="panel">
+				<form th:action="@{/productos/guardar}" th:object="${producto}" method="post">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+					<input type="hidden" th:field="*{id}">
+
+					<div class="form-grid">
+						<div class="form-group">
+							<label for="codigo">Código</label>
+							<input id="codigo" type="text"
+								th:value="${producto.codigo != null ? producto.codigo : 'Se generará automáticamente'}"
+								readonly>
+							<small class="muted">El sistema asigna un código único al guardar.</small>
+						</div>
+
+						<div class="form-group">
+							<label for="nombre">Nombre</label>
+							<input id="nombre" type="text" th:field="*{nombre}" placeholder="Pantalla Samsung A52"
+								required>
+						</div>
+
+						<div class="form-group full">
+							<label for="descripcion">Descripción</label>
+							<textarea id="descripcion" th:field="*{descripcion}"
+								placeholder="Descripción del producto"></textarea>
+						</div>
+
+						<div class="form-group">
+							<label for="tipoProducto">Tipo</label>
+							<select id="tipoProducto" th:field="*{tipoProducto}" required>
+								<option value="">Seleccione un tipo</option>
+								<option value="REPUESTO">Repuesto</option>
+								<option value="ACCESORIO">Accesorio</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label for="unidadMedida">Unidad de medida</label>
+							<input id="unidadMedida" type="text" th:field="*{unidadMedida}" placeholder="Unidad">
+						</div>
+
+						<div class="form-group">
+							<label for="marca">Marca</label>
+							<input id="marca" type="text" th:field="*{marca}">
+						</div>
+
+						<div class="form-group">
+							<label for="modeloCompatible">Modelo compatible</label>
+							<input id="modeloCompatible" type="text" th:field="*{modeloCompatible}">
+						</div>
+
+						<div class="form-group">
+							<label for="precioCompra">Precio de compra</label>
+							<input id="precioCompra" type="number" th:field="*{precioCompra}" min="0" step="0.01"
+								required>
+						</div>
+
+						<div class="form-group">
+							<label for="precioVenta">Precio de venta</label>
+							<input id="precioVenta" type="number" th:field="*{precioVenta}" min="0" step="0.01"
+								required>
+						</div>
+
+						<div class="form-group">
+							<label>Stock inicial</label>
+							<input type="text" value="0 (se registra mediante compras)" readonly>
+							<small class="muted">El stock aumenta al confirmar una compra.</small>
+						</div>
+
+						<div class="form-group">
+							<label for="stockMinimo">Stock mínimo</label>
+							<input id="stockMinimo" type="number" th:field="*{stockMinimo}" min="0" required>
+						</div>
+
+						<div class="form-group">
+							<label for="categoriaId">Categoría</label>
+							<select id="categoriaId" name="categoriaId" required>
+								<option value="">Seleccione una categoría</option>
+								<option th:each="categoria : ${categorias}" th:value="${categoria.id}"
+									th:text="${categoria.nombre}"
+									th:selected="${producto.categoria != null and categoria.id == producto.categoria.id}">
+								</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label for="proveedorId">Proveedor</label>
+							<select id="proveedorId" name="proveedorId">
+								<option value="">Sin proveedor</option>
+								<option th:each="proveedor : ${proveedores}" th:value="${proveedor.id}"
+									th:text="${proveedor.razonSocial}"
+									th:selected="${producto.proveedor != null and proveedor.id == producto.proveedor.id}">
+								</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="actions">
+						<button class="btn btn-primary" type="submit">Guardar producto</button>
+						<a class="btn btn-secondary" th:href="@{/productos}">Cancelar</a>
+					</div>
+				</form>
+			</section>
+		</main>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="inventario" pageWidth="842" pageHeight="595" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30">
+    <parameter name="DESDE" class="java.lang.String"/>
+    <parameter name="HASTA" class="java.lang.String"/>
+    <field name="codigo" class="java.lang.String"/>
+    <field name="producto" class="java.lang.String"/>
+    <field name="categoria" class="java.lang.String"/>
+    <field name="proveedor" class="java.lang.String"/>
+    <field name="precioCompra" class="java.math.BigDecimal"/>
+    <field name="precioVenta" class="java.math.BigDecimal"/>
+    <field name="stock" class="java.lang.Integer"/>
+    <field name="minimo" class="java.lang.Integer"/>
+    <field name="valorizacion" class="java.math.BigDecimal"/>
+    <title><band height="52">
+        <staticText><reportElement x="0" y="0" width="782" height="26"/><textElement><font size="16" isBold="true"/></textElement><text><![CDATA[Inventario general - Mundo Tecnológico y Electrónico]]></text></staticText>
+        <staticText><reportElement x="0" y="29" width="782" height="18"/><textElement><font size="9"/></textElement><text><![CDATA[Existencias actuales de productos activos]]></text></staticText>
+    </band></title>
+    <columnHeader><band height="25">
+        <staticText><reportElement x="0" y="0" width="90" height="25"/><box><pen lineWidth="0.3"/></box><textElement><font size="8" isBold="true"/></textElement><text><![CDATA[Código]]></text></staticText>
+        <staticText><reportElement x="90" y="0" width="165" height="25"/><box><pen lineWidth="0.3"/></box><textElement><font size="8" isBold="true"/></textElement><text><![CDATA[Producto]]></text></staticText>
+        <staticText><reportElement x="255" y="0" width="125" height="25"/><box><pen lineWidth="0.3"/></box><textElement><font size="8" isBold="true"/></textElement><text><![CDATA[Categoría]]></text></staticText>
+        <staticText><reportElement x="380" y="0" width="125" height="25"/><box><pen lineWidth="0.3"/></box><textElement><font size="8" isBold="true"/></textElement><text><![CDATA[Proveedor]]></text></staticText>
+        <staticText><reportElement x="505" y="0" width="62" height="25"/><box><pen lineWidth="0.3"/></box><textElement><font size="8" isBold="true"/></textElement><text><![CDATA[P. compra]]></text></staticText>
+        <staticText><reportElement x="567" y="0" width="62" height="25"/><box><pen lineWidth="0.3"/></box><textElement><font size="8" isBold="true"/></textElement><text><![CDATA[P. venta]]></text></staticText>
+        <staticText><reportElement x="629" y="0" width="45" height="25"/><box><pen lineWidth="0.3"/></box><textElement><font size="8" isBold="true"/></textElement><text><![CDATA[Stock]]></text></staticText>
+        <staticText><reportElement x="674" y="0" width="45" height="25"/><box><pen lineWidth="0.3"/></box><textElement><font size="8" isBold="true"/></textElement><text><![CDATA[Mín.]]></text></staticText>
+        <staticText><reportElement x="719" y="0" width="63" height="25"/><box><pen lineWidth="0.3"/></box><textElement><font size="8" isBold="true"/></textElement><text><![CDATA[Valorizado]]></text></staticText>
+    </band></columnHeader>
+    <detail><band height="22">
+        <textField><reportElement x="0" y="0" width="90" height="22"/><box><pen lineWidth="0.3"/></box><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression></textField>
+        <textField><reportElement x="90" y="0" width="165" height="22"/><box><pen lineWidth="0.3"/></box><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{producto}]]></textFieldExpression></textField>
+        <textField><reportElement x="255" y="0" width="125" height="22"/><box><pen lineWidth="0.3"/></box><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression></textField>
+        <textField><reportElement x="380" y="0" width="125" height="22"/><box><pen lineWidth="0.3"/></box><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{proveedor}]]></textFieldExpression></textField>
+        <textField><reportElement x="505" y="0" width="62" height="22"/><box><pen lineWidth="0.3"/></box><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{precioCompra}]]></textFieldExpression></textField>
+        <textField><reportElement x="567" y="0" width="62" height="22"/><box><pen lineWidth="0.3"/></box><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{precioVenta}]]></textFieldExpression></textField>
+        <textField><reportElement x="629" y="0" width="45" height="22"/><box><pen lineWidth="0.3"/></box><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{stock}]]></textFieldExpression></textField>
+        <textField><reportElement x="674" y="0" width="45" height="22"/><box><pen lineWidth="0.3"/></box><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{minimo}]]></textFieldExpression></textField>
+        <textField><reportElement x="719" y="0" width="63" height="22"/><box><pen lineWidth="0.3"/></box><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$F{valorizacion}]]></textFieldExpression></textField>
+    </band></detail>
+</jasperReport>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Asignar técnico - Mundo Tecnológico y Electrónico</title><link rel="stylesheet" th:href="@{/css/estilos.css}"></head>
+<body>
+<header class="header"><div class="brand"><div class="brand-mark">M</div><div class="logo">Mundo Tecnológico y Electrónico</div></div><div class="header-user" sec:authorize="isAuthenticated()">Usuario: <strong sec:authentication="name"></strong> &nbsp;|&nbsp;
+	 <form th:action="@{/logout}" method="post" class="logout-form">
+         <input
+	        type="hidden"
+	        th:name="${_csrf.parameterName}"
+	        th:value="${_csrf.token}">
+
+	    <button type="submit" class="logout-button">
+	        Cerrar sesión
+	    </button>
+
+	</form>
+</div></header>
+<div class="layout"><div th:replace="~{fragments/menu :: sidebar}"></div><main class="content"><h1 class="page-title">Asignar técnico</h1><p class="page-subtitle">Asigna un responsable a la atención seleccionada.</p><section class="panel"><div class="detail-grid"><div class="detail-item"><span class="detail-label">Código</span><span class="detail-value" th:text="${atencion.codigoSeguimiento}"></span></div><div class="detail-item"><span class="detail-label">Cliente</span><span class="detail-value" th:text="${atencion.cliente.nombres + ' ' + atencion.cliente.apellidos}"></span></div><div class="detail-item"><span class="detail-label">Equipo</span><span class="detail-value" th:text="${atencion.tipoEquipo + ' ' + atencion.marca + ' ' + atencion.modelo}"></span></div><div class="detail-item"><span class="detail-label">Estado actual</span><span class="badge" th:text="${atencion.estado.descripcion}"></span></div></div><p th:if="${#lists.isEmpty(tecnicos)}" class="alert alert-error">No existen técnicos o administradores activos disponibles.</p><form th:if="${not #lists.isEmpty(tecnicos)}" th:action="@{/asignaciones/atencion/{id}(id=${atencion.id})}" method="post"><div class="form-group"><label for="tecnicoId">Responsable de la atención</label><select id="tecnicoId" name="tecnicoId" required><option value="">Seleccione un responsable</option><option th:each="tecnico : ${tecnicos}" th:value="${tecnico.id}" th:text="${tecnico.nombres + ' ' + tecnico.apellidos + ' - ' + tecnico.username + ' (' + tecnico.rol + ')'}"></option></select></div><div class="actions"><button class="btn btn-primary" type="submit">Asignar responsable</button><a class="btn btn-secondary" th:href="@{/atenciones/detalle/{id}(id=${atencion.id})}">Cancelar</a></div></form></section></main></div>
+</body></html>

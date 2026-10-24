@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Inicio - Mundo Tecnológico y Electrónico</title>
+	<link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+	<header class="header">
+		<div class="brand">
+			<div class="brand-mark">M</div>
+			<div class="logo">Mundo Tecnológico y Electrónico</div>
+		</div>
+		<div class="header-user" sec:authorize="isAuthenticated()">
+			Usuario: <strong sec:authentication="name"></strong> &nbsp;|&nbsp;
+			<form th:action="@{/logout}" method="post" class="header-logout-form">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+				<button type="submit" class="header-logout-button">Cerrar sesión</button>
+			</form>
+		</div>
+	</header>
+
+	<div class="layout">
+		<div th:replace="~{fragments/menu :: sidebar}"></div>
+		<main class="content">
+			<section class="hero">
+				<h1>Bienvenido a Mundo Tecnológico y Electrónico</h1>
+				<p>Gestiona reparaciones, inventario, compras y ventas desde un solo lugar.</p>
+			</section>
+
+			<section class="cards">
+				<div class="card">
+					<div class="card-title">Atención técnica</div>
+					<p>Registra equipos, diagnósticos, evidencias y estados de reparación.</p>
+					<a class="btn btn-primary" th:href="@{/atenciones}">Ver atenciones</a>
+				</div>
+
+				<div class="card">
+					<div class="card-title">Inventario</div>
+					<p>Controla repuestos, accesorios, precios y existencias.</p>
+					<a class="btn btn-primary" th:href="@{/productos}">Ver productos</a>
+				</div>
+
+				<div class="card">
+					<div class="card-title">Ventas</div>
+					<p>Registra ventas y descuenta el stock automáticamente.</p>
+					<a class="btn btn-success" th:href="@{/ventas}">Ver ventas</a>
+				</div>
+
+				<!-- Solo visible para el ADMINISTRADOR para evitar el error 403 en técnicos -->
+				<div class="card" sec:authorize="hasRole('ADMINISTRADOR')">
+					<div class="card-title">Compras</div>
+					<p>Registra compras y actualiza el inventario.</p>
+					<a class="btn btn-warning" th:href="@{/compras}">Ver compras</a>
+				</div>
+			</section>
+
+			<section class="panel">
+				<h2>Consulta pública de reparación</h2>
+				<p class="muted">El cliente puede consultar el estado de su equipo con su código de atención.</p>
+				<a class="btn btn-primary" th:href="@{/consulta-atencion}">Consultar estado</a>
+			</section>
+		</main>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Registrar compra - Mundo Tecnológico y Electrónico</title>
+	<link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+	<header class="header">
+		<div class="brand">
+			<div class="brand-mark">M</div>
+			<div class="logo">Mundo Tecnológico y Electrónico</div>
+		</div>
+		<div class="header-user" sec:authorize="isAuthenticated()">
+			Usuario: <strong sec:authentication="name"></strong> &nbsp;|&nbsp;
+			<form th:action="@{/logout}" method="post" class="header-logout-form">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+				<button type="submit" class="header-logout-button">Cerrar sesión</button>
+			</form>
+		</div>
+	</header>
+
+	<div class="layout">
+		<div th:replace="~{fragments/menu :: sidebar}"></div>
+		<main class="content">
+			<h1 class="page-title">Registrar compra</h1>
+			<p class="page-subtitle">Busca rápidamente el producto por nombre o código.</p>
+			<p th:if="${error}" class="alert alert-error" th:text="${error}"></p>
+
+			<section class="panel">
+				<form id="formCompra" th:action="@{/compras/guardar}" method="post">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+					<div class="form-grid">
+						<div class="form-group">
+							<label for="proveedorId">Proveedor</label>
+							<select id="proveedorId" name="proveedorId" required>
+								<option value="">Seleccione un proveedor</option>
+								<option th:each="proveedor : ${proveedores}" th:value="${proveedor.id}"
+									th:text="${proveedor.razonSocial}">
+								</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label for="productoBusqueda">Producto</label>
+							<input id="productoBusqueda" list="productosDisponibles"
+								placeholder="Escribe nombre o código" autocomplete="off" required>
+							<input type="hidden" id="productoId" name="productoId">
+							<datalist id="productosDisponibles">
+								<option th:each="producto : ${productos}"
+									th:value="${producto.codigo + ' - ' + producto.nombre}"
+									th:attr="data-id=${producto.id}, data-nombre=${producto.nombre}, data-codigo=${producto.codigo}">
+								</option>
+							</datalist>
+							<small id="productoAyuda" class="muted">Selecciona una opción de la lista.</small>
+						</div>
+
+						<div class="form-group">
+							<label for="cantidad">Cantidad</label>
+							<input id="cantidad" type="number" name="cantidad" min="1" required>
+						</div>
+
+						<div class="form-group">
+							<label for="precioUnitario">Precio unitario de compra</label>
+							<input id="precioUnitario" type="number" name="precioUnitario" min="0" step="0.01" required>
+						</div>
+					</div>
+
+					<div class="actions">
+						<button class="btn btn-warning" type="submit">Registrar compra</button>
+						<a class="btn btn-secondary" th:href="@{/compras}">Cancelar</a>
+					</div>
+				</form>
+			</section>
+		</main>
+	</div>
+
+	<script>
+		const formCompra = document.getElementById('formCompra');
+		const entrada = document.getElementById('productoBusqueda');
+		const idInput = document.getElementById('productoId');
+		const ayuda = document.getElementById('productoAyuda');
+		const opciones = [...document.querySelectorAll('#productosDisponibles option')];
+
+		function actualizarProductoId() {
+			const texto = entrada.value.trim().toLowerCase();
+			if (!texto) {
+				idInput.value = '';
+				return;
+			}
+
+			// Busca coincidencia exacta por "código - nombre", o solo por "nombre", o solo por "código"
+			const op = opciones.find(o =>
+				o.value.trim().toLowerCase() === texto ||
+				(o.dataset.nombre && o.dataset.nombre.trim().toLowerCase() === texto) ||
+				(o.dataset.codigo && o.dataset.codigo.trim().toLowerCase() === texto)
+			);
+
+			idInput.value = op ? op.dataset.id : '';
+
+			if (idInput.value) {
+				ayuda.textContent = 'Producto seleccionado correctamente.';
+				ayuda.className = 'muted';
+			}
+		}
+
+		entrada.addEventListener('input', actualizarProductoId);
+		entrada.addEventListener('change', actualizarProductoId);
+
+		formCompra.addEventListener('submit', e => {
+			actualizarProductoId();
+			if (!idInput.value) {
+				e.preventDefault();
+				ayuda.textContent = 'Selecciona un producto válido de la lista desplegable.';
+				ayuda.className = 'alert alert-error';
+				entrada.focus();
+			}
+		});
+	</script>
+</body>
+
+</html>
